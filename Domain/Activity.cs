@@ -4,7 +4,6 @@ namespace Domain
 {
     public class Activity
     {
-        [Key]
         // This Annotation is required when you using custom attribute as your key.
         // For Example: MyId
         public Guid  Id { get; set; }
