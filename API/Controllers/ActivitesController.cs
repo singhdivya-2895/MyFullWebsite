@@ -1,27 +1,33 @@
-﻿using Data;
+﻿using Application.Features.Activities;
+using Application.Features.Create;
+using Application.Features.Details;
 using Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
-        private readonly DataContext _context;
-
-        public ActivitiesController(DataContext context)
+        public ActivitiesController(IMediator mediator) : base(mediator)
         {
-            _context = context;
         }
+
         [HttpGet]
         public async Task<ActionResult<List<Activity>>> GetActivities()
         {
-            return await _context.Activities.ToListAsync();
+            var getQuery = new GetAllActivitiesQuery();
+            return await _mediator.Send(getQuery);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivitiesById(Guid id)
         {
-            return await _context.Activities.FindAsync(id);
+            return await _mediator.Send(new GetByIdActivitiesQuery { ID = id });
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateActivities (Activity activity)
+        {
+            return Ok(await _mediator.Send(new CreateActivitiesCommand { Activity = activity }));    
         }
     } 
 }
