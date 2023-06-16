@@ -22,8 +22,9 @@ builder.Services.AddCors(opt =>
      policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
     });
 });
-
+//typeof ka matlb hai uske namespace and class ko refer kar raha hai
 builder.Services.AddMediatR(typeof(Application.Features.Activities.GetAllActivitiesQuery));
+builder.Services.AddAutoMapper(typeof(Application.Mapper.MapperProfiles));
 
 var app = builder.Build();
 

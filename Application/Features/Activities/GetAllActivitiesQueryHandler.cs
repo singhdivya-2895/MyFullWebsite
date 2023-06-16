@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Activities
 {
-    public class GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery, List<Activity>>
+    public class GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivitiesQuery, 
+                                                                      List<Activity>>
     {
         private readonly DataContext _context;
         public GetAllActivitiesQueryHandler(DataContext context)
@@ -13,7 +14,8 @@ namespace Application.Features.Activities
             _context = context;
         }
 
-        public async Task<List<Activity>> Handle(GetAllActivitiesQuery request, CancellationToken cancellationToken)
+        public async Task<List<Activity>> Handle(GetAllActivitiesQuery request,
+                                          CancellationToken cancellationToken)
         {
             return await _context.Activities.ToListAsync();
         }
