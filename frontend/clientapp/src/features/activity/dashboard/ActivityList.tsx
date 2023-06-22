@@ -20,6 +20,8 @@ export function ActivityList({ activities, selectActivity }: Props) {
                                 <div>{activity.city},{activity.venue}</div>
                             </Item.Description>
                             <Item.Extra>
+                                {/* this is a arrow function we need to take whenever
+                                we have to pass an argument. */}
                                 <Button onClick={() => selectActivity(activity.id)}
                                     floated='right' content='View' color='blue' />
                                 <Label basic content={activity.category} />
