@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Container, } from 'semantic-ui-react';
 import { Activity } from './models/Activity';
 import { NavBar } from './NavBar';
 import { ActivityDashboard } from '../../features/activity/dashboard/ActivityDashboard';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
+import agent from '../api/agent';
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -14,8 +14,12 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let response = await axios.get('http://localhost:5261/api/activities');
-        setActivities(response.data);
+        let response = await agent.Activities.fetchlist();
+        response.forEach(activity => {
+          activity.date = activity.date.split('T')[0];
+          //E.g.: "2023-04-07T06:16:23.6882405"  0: 2023-04-07, 1: 06:16:23.6882405
+        });
+        setActivities(response);
       }
       catch (error) {
         console.error(`Error:${error}`)
@@ -39,13 +43,17 @@ function App() {
     setEditMode(false);
   }
   function handleCreateOrEditActivity(activity: Activity) {
-    activity.id
-      ? setActivities([...activities.filter(x => x.id !== activity.id), activity])
-      : setActivities([...activities, {...activity,id: uuid()}]);
+    if (activity.id) {
+      setActivities([...activities.filter(x => x.id !== activity.id), activity]);
+    }
+    else {
+      activity.id = uuid();
+      setActivities([...activities, { ...activity }]);
+    }
     setSelectedActivity(activity);
   }
-  function handleDeleteActivity(id: string){
-     setActivities([...activities.filter(x => x.id !== id)])
+  function handleDeleteActivity(id: string) {
+    setActivities([...activities.filter(x => x.id !== id)])
   }
 
   return (
