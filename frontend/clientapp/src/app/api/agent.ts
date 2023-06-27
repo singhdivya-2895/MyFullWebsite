@@ -46,7 +46,7 @@ const Activities = {
   create: (activity: Activity) => request.post<void>("/activities", activity),
   update: (activity: Activity) =>
     request.put<void>(`/activities/${activity.id}`, activity),
-  delete: (id: string) => request.get<void>(`/activities/${id}`),
+  delete: (id: string) => request.delete<void>(`/activities/${id}`),
 };
 const agent = {
   Activities,
