@@ -5,11 +5,13 @@ import { NavBar } from './NavBar';
 import { ActivityDashboard } from '../../features/activity/dashboard/ActivityDashboard';
 import { v4 as uuid } from 'uuid';
 import agent from '../api/agent';
+import LoadingComponents from './LoadingComponents';
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +22,7 @@ function App() {
           //E.g.: "2023-04-07T06:16:23.6882405"  0: 2023-04-07, 1: 06:16:23.6882405
         });
         setActivities(response);
+        setLoading(false);
       }
       catch (error) {
         console.error(`Error:${error}`)
@@ -55,6 +58,8 @@ function App() {
   function handleDeleteActivity(id: string) {
     setActivities([...activities.filter(x => x.id !== id)])
   }
+
+  if (loading) return <LoadingComponents content='Loading ' />
 
   return (
     <>

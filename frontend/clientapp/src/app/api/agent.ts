@@ -1,7 +1,23 @@
 import axios, { AxiosResponse } from "axios";
 import { Activity } from "../layout/models/Activity";
 
+const sleep = (delay: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
+};
+
 axios.defaults.baseURL = "http://localhost:5261/api";
+
+axios.interceptors.response.use(async (response) => {
+  try {
+    await sleep(1000);
+    return response;
+  } catch (error) {
+    console.log(error);
+    return await Promise.reject(error);
+  }
+});
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -26,6 +42,11 @@ const request = {
 
 const Activities = {
   fetchlist: () => request.get<Activity[]>("/activities"),
+  details: (id: string) => request.get<void>(`/activities/${id}`),
+  create: (activity: Activity) => request.post<void>("/activities", activity),
+  update: (activity: Activity) =>
+    request.put<void>(`/activities/${activity.id}`, activity),
+  delete: (id: string) => request.get<void>(`/activities/${id}`),
 };
 const agent = {
   Activities,
